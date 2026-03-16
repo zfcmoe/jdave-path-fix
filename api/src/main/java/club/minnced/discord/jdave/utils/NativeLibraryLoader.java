@@ -46,9 +46,12 @@ public class NativeLibraryLoader {
 
     @NonNull
     public static SymbolLookup getSymbolLookup() {
-        String envPath = System.getenv().get("LIBDAVE_PATH");
-        if (envPath != null) {
-            return SymbolLookup.libraryLookup(envPath, Arena.global());
+        String libdavePath = System.getProperty("LIBDAVE_PATH");
+        if (libdavePath == null || libdavePath.isBlank()) {
+            libdavePath = System.getenv("LIBDAVE_PATH");
+        }
+        if (libdavePath != null) {
+            return SymbolLookup.libraryLookup(libdavePath, Arena.global());
         } else {
             Path tempFile = createTemporaryFile();
             return SymbolLookup.libraryLookup(tempFile, Arena.global());
